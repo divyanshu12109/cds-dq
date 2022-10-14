@@ -1,0 +1,5 @@
+def name_cleaning(s):
+    t = s.strip()
+    d = ' '.join( t.split() )
+    print(d)
+    
