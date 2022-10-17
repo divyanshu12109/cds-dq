@@ -74,15 +74,10 @@ def config(x):
     for i in x:
         columns.append(i)
         
-    config_df['COLUMNS'] = columns
-    config_df['IS_NAME'] = name
-    config_df['IS_EMAIL'] = email
-    config_df['IS_MOBILE'] = phone
-    config_df['IS_DATE'] = dates
-    config_df['IS_NUMBER'] = num
-    config_df['DATE_FORMAT'] = datesf
-    config_df['NULL_REPLACE'] = nullable
-    config_df['SPEC_CHAR_FLAG'] = spec
-    config_df['DUPLICATE_KEY'] = dup
+    rules = ['COLUMNS', 'IS_NAME', 'IS_EMAIL', 'IS_MOBILE', 'IS_DATE', 'IS_NUMBER', 'DATE_FORMAT', 'NULL_REPLACE', 'SPEC_CHAR_FLAG', 'DUPLICATE_KEY']
+    data = [columns, name, email, phone, dates, num, datesf, nullable, spec, dup]
+    
+    for i in range(0,len(rules)):
+        config_df[rules[i]] = data[i]
     
     print(config_df)
