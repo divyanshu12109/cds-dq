@@ -1,0 +1,88 @@
+def config(x):
+    
+    name = []
+    for i in x:
+        if any(str(item).replace(" ", "").isalpha() for item in x[i]):
+            name.append(1)
+        else:
+            name.append(0)
+            
+    email = []
+    pat = "^[a-zA-Z0-9-_]+@[a-zA-Z0-9]+.[a-z]{1,3}$"
+    for i in x:
+        if any(re.match(pat,str(item)) for item in x[i]):
+            email.append(1)
+        email.append(0)
+        
+    phone = []
+    pat = "^[6-9][0-9]{9}$"
+    for i in x:
+        if any(re.match(pat,str(item)) for item in x[i]):
+            phone.append(1)
+        phone.append(0)
+        
+    dates = []
+    for i in x:
+        if any(type(item) == "datetime.datetime" for item in x[i]):
+            dates.append(1)
+        dates.append(0)
+        
+    num = []
+    pat = "[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?$"
+    for i in x:
+        if any(re.search(pat,str(item)) is not None for item in x[i]):
+            num.append(1)
+        else:
+            num.append(0)
+            
+    datesf = []
+    for i in x:
+        if any(str(item)[3:5] <= "12" and str(item)[3:5] in ['1', '3', '5', '7', '8', '10', '12'] and str(item)[0:2] <= "31" and len(str(item)[6:10]) == 4 and type(item) == "datetime.datetime" for item in x[i]) == True:
+            datesf.append(1)
+        elif any(str(item)[3:5] <= "12" and str(item)[3:5] in ['4', '6', '7', '9', '11'] and str(item)[0:2] <= "30" and len(str(item)[6:10]) == 4 and type(item) == "datetime.datetime" for item in x[i]) == True:
+            datesf.append(1)
+        elif any(str(item)[3:5] == '02' and calendar.isleap(int(str(item)[6:10])) and str(item)[0:2] <= "29" and len(str(item)[6:10]) == 4 and type(item) == "datetime.datetime" for item in x[i]) == True:
+            datesf.append(1)
+        elif any(str(item)[3:5] == '02' and calendar.isleap(int(str(item)[6:10])) == False and str(item)[0:2] <= "28" and len(str(item)[6:10]) == 4 and type(item) == "datetime.datetime" for item in x[i]) == True:
+            datesf.append(1)
+        else:
+            datesf.append(0)
+            
+    nullable = []
+    for i in x:
+        if any(item == "NULL" for item in x[i]):
+            nullable.append(1)
+        nullable.append(0)
+        
+    spec = []
+    pat = re.compile("[$&+,:;=?@#|'<>.\-^*()%!]")
+    for i in x:
+        if any(pat.search(str(item)) is not None and type(item) == str for item in x[i]):\
+            spec.append(1)
+        elif any(pat.search(str(item)) is None and type(item) == str for item in x[i]):
+            spec.append(0)
+        else:
+            spec.append(0)
+    
+    dup = []
+    for i in x:
+        if x.duplicated(keep=False).sum() > 1:
+            dup.append(1)
+        dup.append(0)
+    
+    columns = []
+    for i in x:
+        columns.append(i)
+        
+    config_df['COLUMNS'] = columns
+    config_df['IS_NAME'] = name
+    config_df['IS_EMAIL'] = email
+    config_df['IS_MOBILE'] = phone
+    config_df['IS_DATE'] = dates
+    config_df['IS_NUMBER'] = num
+    config_df['DATE_FORMAT'] = datesf
+    config_df['NULL_REPLACE'] = nullable
+    config_df['SPEC_CHAR_FLAG'] = spec
+    config_df['DUPLICATE_KEY'] = dup
+    
+    print(config_df)
