@@ -1,5 +1,19 @@
-def name_cleaning(s):
-    t = s.strip()
-    d = ' '.join( t.split() )
-    print(d)
+def name_cleaning(df):
+    for j in range(len(df.axes[0])):
+        t = df.loc[j,'name'].strip()
+        df.loc[j,'name'] = ' '.join(df.loc[j,'name'].split() )
+    print(df)
     
+    
+    
+    
+    
+    
+    def null_replace(df):
+    # Filling null values with 0
+    df = df.replace(np.nan, 0)
+
+    # Show the DataFrame
+    print(df)
+
+   
