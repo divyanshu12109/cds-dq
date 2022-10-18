@@ -23,9 +23,11 @@ def config(x):
         
     dates = []
     for i in x:
-        if any(type(item) == "datetime.datetime" for item in x[i]):
-            dates.append(1)
-        dates.append(0)
+        try:
+            if any(type(parse(str(item))) == datetime for item in x[i]):
+                dates.append(1)
+        except:
+            dates.append(0)
         
     num = []
     pat = "[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?$"
@@ -55,9 +57,9 @@ def config(x):
         nullable.append(0)
         
     spec = []
-    pat = re.compile("[$&+,:;=?@#|'<>.\-^*()%!]")
+    pat = re.compile("[$&+,:;=?@#|'<>.\-^*()%!_]")
     for i in x:
-        if any(pat.search(str(item)) is not None and type(item) == str for item in x[i]):\
+        if any(pat.search(str(item)) is not None and type(item) == str for item in x[i]):
             spec.append(1)
         elif any(pat.search(str(item)) is None and type(item) == str for item in x[i]):
             spec.append(0)
@@ -77,7 +79,8 @@ def config(x):
     rules = ['COLUMNS', 'IS_NAME', 'IS_EMAIL', 'IS_MOBILE', 'IS_DATE', 'IS_NUMBER', 'DATE_FORMAT', 'NULL_REPLACE', 'SPEC_CHAR_FLAG', 'DUPLICATE_KEY']
     data = [columns, name, email, phone, dates, num, datesf, nullable, spec, dup]
     
+    config_df = pd.DataFrame(columns = rules)
     for i in range(0,len(rules)):
         config_df[rules[i]] = data[i]
     
-    print(config_df)
+    return config_df
