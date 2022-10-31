@@ -12,51 +12,39 @@ def config(x):
     for i in x:
         if any(re.match(pat,str(item)) for item in x[i]):
             email.append(1)
-        email.append(0)
+        else:
+            email.append(0)
         
     phone = []
     pat = "^[6-9][0-9]{9}$"
     for i in x:
         if any(re.match(pat,str(item)) for item in x[i]):
             phone.append(1)
-        phone.append(0)
+        else:
+            phone.append(0)
         
     dates = []
     for i in x:
-        if any(item is date for item in x[i]):
-            dates.append(1)
-        else:
+        try:
+            if any(parse(item) for item in x[i]):
+                dates.append(1)
+        except:
             dates.append(0)
         
     num = []
-    pat = "[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?$"
     for i in x:
-        if any(re.search(pat,str(item)) is not None for item in x[i]):
-            num.append(1)
-        else:
+        try:
+            if any(int(item) for item in x[i]):
+                num.append(1)
+        except:
             num.append(0)
             
     t = []
     for i in x:
-        if any(item is date for item in x[i]):
-            datesf = []
-            for j in x[i]:
-                if int(parse(j).strftime('%d/%m/%Y')[3:5]) <= 12 and parse(j).strftime('%d/%m/%Y')[3:5] in ['01', '03', '05', '07', '08', '10', '12'] and int(parse(j).strftime('%d/%m/%Y')[0:2]) <= 31 and len(parse(j).strftime('%d/%m/%Y')[6:10]) == 4:
-                    datesf.append(1)
-                elif int(parse(j).strftime('%d/%m/%Y')[3:5]) <= 12 and parse(j).strftime('%d/%m/%Y')[3:5] in ['04', '06', '07', '09', '11'] and int(parse(j).strftime('%d/%m/%Y')[0:2]) <= 30 and len(parse(j).strftime('%d/%m/%Y')[6:10]) == 4:
-                    datesf.append(1)
-                elif parse(j).strftime('%d/%m/%Y')[3:5] == '02' and calendar.isleap(int(parse(j).strftime('%d/%m/%Y')[6:10])) and int(parse(j).strftime('%d/%m/%Y')[0:2]) <= 29 and len(parse(j).strftime('%d/%m/%Y')[6:10]) == 4:
-                    datesf.append(1)
-                elif parse(j).strftime('%d/%m/%Y')[3:5] == '02' and calendar.isleap(int(parse(j).strftime('%d/%m/%Y')[6:10])) == False and int(parse(j).strftime('%d/%m/%Y')[0:2]) <= 28 and len(parse(j).strftime('%d/%m/%Y')[6:10]) == 4:
-                    datesf.append(1)
-                else:
-                    datesf.append(0)
-
-            if sum(datesf) == len(x):
+        try:
+            if all(parse(item) for item in x[i]):
                 t.append(1)
-            else:
-                t.append(0)
-        else:
+        except:
             t.append(0)
             
     nullable = []
