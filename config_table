@@ -93,3 +93,32 @@ def config(x):
         config_df[rules[i]] = data[i]
     
     return config_df
+
+rule_list = []
+for i in df3.columns:
+    new = []
+    new.append(i)
+    for j in enumerate(df3[i]):
+        if j[1] == 1:
+            new.append(df3.iloc[j[0],0])
+    rule_list.append(new)
+
+for i in rule_list:
+    if i[0] == 'IS_NAME':
+        name_cleaning(d, i[1:])
+    if i[0] == 'IS_EMAIL':
+        email_set(d, i[1:])
+    if i[0] == 'IS_MOBILE':
+        phone_check(d)
+    if i[0] == 'IS_DATE':
+        date_set(d, i[1:])
+    if i[0] == 'IS_NUMBER':
+        numo_set(d, i[1:])
+    if i[0] == 'DATE_FORMAT':
+        date_set(d, i[1:])
+    if i[0] == 'NULL_REPLACE':
+        null_replace(d, i[1:])
+    if i[0] == 'SPEC_CHAR_FLAG':
+        spec_char(d, i[1:])
+    else:
+        continue
